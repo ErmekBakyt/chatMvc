@@ -12,7 +12,7 @@
     box-shadow: 0 3px 7px 1px aliceblue;
 }
 .form-block{
-    border-radius: 50%;
+    border-radius: 10px;
     width: 400px;
     height: 400px;
     background-color: aliceblue;
@@ -22,3 +22,41 @@
     transform: translate(-50%, -50%);
     top: 40%;
 }
+.register-form-input{
+    border:none;
+    border-bottom: 1px solid #7e9ac4;
+    background-color: aliceblue;
+    display: block;
+    margin: 15px auto;
+    padding:5px 7px;
+}
+.register-form{
+    padding-top: 15%;
+    font-family: 'Raleway', sans-serif;
+}
+.sign-up-btn{
+    display: block;
+    margin:10px auto;
+    max-width: 200px;
+    width: 100%;
+    background-color: #0d6efd;
+    padding: 5px 0;
+    color: #fff;
+    border: none;
+}
+.sign-in-btn{
+    display: block;
+    margin:10px auto;
+    max-width: 200px;
+    width: 100%;
+    background-color: aliceblue;
+    padding: 5px 0;
+    color: #0d6efd;
+    border: 1px solid #0d6efd;
+    text-align: center;
+    text-decoration: none;
+}
+.register-container{
+    font-family: 'Raleway', sans-serif;
+}
+

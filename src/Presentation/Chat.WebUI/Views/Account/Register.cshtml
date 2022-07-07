@@ -4,19 +4,28 @@
     Layout = "_AccountLayout";
 }
 
-<div class="container position-relative">
+<div class="container position-relative register-container">
     <div class="block-1"></div>
     <div class="block-2"></div>
     <div class="form-block">
-        <form asp-action="Register" method="post">
-            <input type="text" asp-for="UserName" class="form-control">
-            <input type="password" asp-for="Password" class="form-control">
-        </form>
+        <div><h5 class="text-center">Sign Up</h5></div>
+        <div class="register-form">
+            <form asp-action="Register" method="post">
+                <input type="text" asp-for="UserName" class="register-form-input" placeholder="Username">
+                <input type="password" asp-for="Password" class="register-form-input mb-5" placeholder="Password">
+                <button class="sign-up-btn">Sign Up</button>
+                <a asp-action="" class="sign-in-btn">Sign In</a>
+            </form>
+        </div>
     </div>
 </div>
+
 @section Styles{
     <environment names="Production, Development, Staging">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
         <link rel="stylesheet" href="~/css/account.css"/>
+        <style>
+        @@import url('https://fonts.googleapis.com/css2?family=Alegreya:wght@400;500&family=IBM+Plex+Mono:wght@300&family=Raleway&family=Rokkitt&display=swap');
+        </style>
     </environment>
 }
