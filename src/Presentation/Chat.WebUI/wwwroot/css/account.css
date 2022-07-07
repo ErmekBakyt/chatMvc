@@ -1,0 +1,24 @@
+.block-1{
+    background-color: #0d6efd;
+    max-height: 400px;
+    height: 300px;
+    border-radius: 10px 10px 0 0;
+    box-shadow: 0 3px 7px 1px aliceblue;
+}
+.block-2{
+    background-color: #fff;
+    height: 500px;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 3px 7px 1px aliceblue;
+}
+.form-block{
+    border-radius: 50%;
+    width: 400px;
+    height: 400px;
+    background-color: aliceblue;
+    position: absolute;
+    left: 50%;
+    right: 50%;
+    transform: translate(-50%, -50%);
+    top: 40%;
+}

@@ -1,0 +1,22 @@
+@model RegisterCommand
+@{
+    ViewBag.Title = "Register";
+    Layout = "_AccountLayout";
+}
+
+<div class="container position-relative">
+    <div class="block-1"></div>
+    <div class="block-2"></div>
+    <div class="form-block">
+        <form asp-action="Register" method="post">
+            <input type="text" asp-for="UserName" class="form-control">
+            <input type="password" asp-for="Password" class="form-control">
+        </form>
+    </div>
+</div>
+@section Styles{
+    <environment names="Production, Development, Staging">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="~/css/account.css"/>
+    </environment>
+}
