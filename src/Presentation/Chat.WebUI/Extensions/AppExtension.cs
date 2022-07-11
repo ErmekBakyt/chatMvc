@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Diagnostics;
 
 namespace Chat.WebUI.Extensions;
 
-public static class AppExtensions
+public static class AppExtension
 {
     public static void ConfigureExceptionHandling(this IApplicationBuilder app, bool includeExceptionDetail)
     {

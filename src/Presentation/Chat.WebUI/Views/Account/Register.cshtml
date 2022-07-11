@@ -11,10 +11,15 @@
         <div><h5 class="text-center">Sign Up</h5></div>
         <div class="register-form">
             <form asp-action="Register" method="post">
+                <div asp-validation-summary="ModelOnly"></div>
                 <input type="text" asp-for="UserName" class="register-form-input" placeholder="Username">
+                <span asp-validation-for="UserName" class="text-danger"></span>
+                <input type="email" asp-for="Email" class="register-form-input" placeholder="Email">
+                <span asp-validation-for="Email" class="text-danger"></span>
                 <input type="password" asp-for="Password" class="register-form-input mb-5" placeholder="Password">
+                <span asp-validation-for="Password" class="text-danger"></span>
                 <button class="sign-up-btn">Sign Up</button>
-                <a asp-action="" class="sign-in-btn">Sign In</a>
+                <a asp-action="Login" class="sign-in-btn">Login</a>
             </form>
         </div>
     </div>
@@ -28,4 +33,8 @@
         @@import url('https://fonts.googleapis.com/css2?family=Alegreya:wght@400;500&family=IBM+Plex+Mono:wght@300&family=Raleway&family=Rokkitt&display=swap');
         </style>
     </environment>
+}
+@section Scripts
+{
+    @* <partial name="_ValidationScriptsPartial"/> *@
 }

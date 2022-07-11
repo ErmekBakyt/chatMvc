@@ -1,0 +1,33 @@
+@model LoginCommand
+@{
+    ViewBag.Title = "Login";
+    Layout = "_AccountLayout";
+}
+
+<div class="container position-relative register-container">
+    <div class="block-1"></div>
+    <div class="block-2"></div>
+    <div class="form-block">
+        <div><h5 class="text-center">Login</h5></div>
+        <div class="register-form">
+            <form asp-action="Login" method="post">
+                <input type="text" asp-for="EmailOrUserName" class="register-form-input" placeholder="Username or email">
+                <input type="password" asp-for="Password" class="register-form-input mb-5" placeholder="Password">
+                <input type="checkbox" asp-for="RememberMe"> Remember me
+                <button class="sign-up-btn">Login</button>
+                <a asp-action="Register" class="sign-in-btn">Sign Up</a>
+            </form>
+            <a asp-action="ForgotPassword">Forgot password</a>
+        </div>
+    </div>
+</div>
+
+@section Styles{
+    <environment names="Production, Development, Staging">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="~/css/account.css"/>
+        <style>
+        @@import url('https://fonts.googleapis.com/css2?family=Alegreya:wght@400;500&family=IBM+Plex+Mono:wght@300&family=Raleway&family=Rokkitt&display=swap');
+        </style>
+    </environment>
+}
