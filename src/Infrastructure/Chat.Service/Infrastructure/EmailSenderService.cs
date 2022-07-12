@@ -40,7 +40,7 @@ public class EmailSenderService : ISenderEmailService
         {
             await client.ConnectAsync(_emailConfiguration.SmtpServer, _emailConfiguration.Port, useSsl: true);
             client.AuthenticationMechanisms.Remove("XOAUTH2");
-            await client.AuthenticateAsync(_emailConfiguration.From, _emailConfiguration.Password);
+            await client.AuthenticateAsync(_emailConfiguration.UserName, _emailConfiguration.Password);
 
             await client.SendAsync(mailMessage);
         }
