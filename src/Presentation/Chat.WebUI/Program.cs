@@ -2,6 +2,7 @@ using AspNetCoreHero.ToastNotification;
 using AspNetCoreHero.ToastNotification.Extensions;
 using Chat.Application;
 using Chat.Persistence;
+using Chat.Service;
 using Chat.WebUI.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,7 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services
     .AddPersistenceRegistration(builder.Configuration)
     .AddApplicationRegistration()
-    .AddIdentityConfiguration();
+    .AddIdentityConfiguration()
+    .AddServiceSettingsConfiguration(builder.Configuration);
 builder.Services.AddNotyf(options =>
 {
     options.Position = NotyfPosition.TopCenter;

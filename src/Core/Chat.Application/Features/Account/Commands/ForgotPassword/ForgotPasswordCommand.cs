@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Routing;
 
 namespace Chat.Application.Features.Account.Commands.ForgotPassword;
 
@@ -18,12 +19,12 @@ public class ForgotPasswordCommandHandler : IRequestHandler<ForgotPasswordComman
 {
     private readonly UserManager<AppUser> _userManager;
     private readonly ISenderEmailService _emailService;
-    private readonly IUrlHelper _urlHelper;
+    private readonly LinkGenerator _linkGenerator;
 
-    public ForgotPasswordCommandHandler(UserManager<AppUser> userManager, IUrlHelper urlHelper, ISenderEmailService emailService)
+    public ForgotPasswordCommandHandler(UserManager<AppUser> userManager, ISenderEmailService emailService, LinkGenerator linkGenerator)
     {
         _userManager = userManager;
-        _urlHelper = urlHelper;
+        _linkGenerator = linkGenerator;
         _emailService = emailService;
     }
 
@@ -34,11 +35,11 @@ public class ForgotPasswordCommandHandler : IRequestHandler<ForgotPasswordComman
         if (user is not null)
         {
             var resetTokenAsync=  await _userManager.GeneratePasswordResetTokenAsync(user);
-            var url = _urlHelper.Action("ResetPassword", "Account", new
+            var url = _linkGenerator.GetPathByAction("ResetPassword", "Account", new
             {
                 userId = user.Id,
                 token = resetTokenAsync
-            }, protocol: new HttpContextAccessor().HttpContext?.Request.Scheme);
+            });
 
             var result = await _emailService.SendEmailAsync(new EmailMessage(new[] { user.Email }, "Reset password", url));
             return result.Succeed ? Result.Success() : Result.Failure(result.Message);

@@ -1,6 +1,6 @@
 using Chat.Application.Common.Interfaces.Infrastructure;
 using Chat.Application.Common.Models;
-using Chat.Core.Entities;
+using Chat.Application.Common.Settings;
 using MailKit.Net.Smtp;
 using MimeKit;
 
@@ -8,9 +8,9 @@ namespace Chat.Service.Infrastructure;
 
 public class EmailSenderService : ISenderEmailService
 {
-    private readonly EmailConfiguration _emailConfiguration;
+    private readonly EmailConfigurationSettings _emailConfiguration;
 
-    public EmailSenderService(EmailConfiguration emailConfiguration)
+    public EmailSenderService(EmailConfigurationSettings emailConfiguration)
     {
         _emailConfiguration = emailConfiguration;
     }
@@ -38,9 +38,9 @@ public class EmailSenderService : ISenderEmailService
         using var client = new SmtpClient();
         try
         {
-            await client.ConnectAsync(_emailConfiguration.SmtpServer, _emailConfiguration.Port, true);
+            await client.ConnectAsync(_emailConfiguration.SmtpServer, _emailConfiguration.Port, useSsl: true);
             client.AuthenticationMechanisms.Remove("XOAUTH2");
-            await client.AuthenticateAsync(_emailConfiguration.UserName, _emailConfiguration.Password);
+            await client.AuthenticateAsync(_emailConfiguration.From, _emailConfiguration.Password);
 
             await client.SendAsync(mailMessage);
         }

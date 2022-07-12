@@ -61,10 +61,9 @@ public class AccountController : BaseController
         if (ModelState.IsValid)
         {
             var result = await Mediator.Send(command);
-            if (!result.Succeed) NotyfError(result.Message);
+            if (!result.Succeed) NotyfError(@"Server error try again please");
 
             return View(command);
-
         }
         NotyfSuccess("Message successfully sent");
         
