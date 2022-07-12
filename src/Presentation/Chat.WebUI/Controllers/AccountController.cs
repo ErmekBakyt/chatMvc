@@ -58,12 +58,43 @@ public class AccountController : BaseController
     [HttpPost]
     public async Task<IActionResult> ForgotPassword(ForgotPasswordCommand command)
     {
-        await Mediator.Send(command);
+        if (ModelState.IsValid)
+        {
+            var result = await Mediator.Send(command);
+            if (!result.Succeed) NotyfError(result.Message);
+
+            return View(command);
+
+        }
+        NotyfSuccess("Message successfully sent");
+        
         return View();
     }
 
-    public async Task<IActionResult> ResetPassword()
+    [HttpGet]
+    public async Task<IActionResult> ResetPassword(string userId, string token)
     {
+        TempData["userId"] = userId;
+        TempData["token"] = token;
+        return View();
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> ResetPassword(ResetPasswordConfirmCommand command)
+    {
+        if (!ModelState.IsValid) return View();
+
+        command.Token = TempData["token"]?.ToString();
+        command.UserId = TempData["userId"]?.ToString();
+        
+        var result = await Mediator.Send(command);
+        if (result.Succeed)
+        {
+            NotyfSuccess("Successfully updated");
+            return View();
+        }
+
+        NotyfError(result.Message);
         return View();
     }
 }

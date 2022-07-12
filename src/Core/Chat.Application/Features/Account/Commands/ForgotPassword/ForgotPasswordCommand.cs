@@ -39,6 +39,10 @@ public class ForgotPasswordCommandHandler : IRequestHandler<ForgotPasswordComman
                 userId = user.Id,
                 token = resetTokenAsync
             }, protocol: new HttpContextAccessor().HttpContext?.Request.Scheme);
+
+            var result = await _emailService.SendEmailAsync(new EmailMessage(new[] { user.Email }, "Reset password", url));
+            return result.Succeed ? Result.Success() : Result.Failure(result.Message);
         }
+        return Result.Failure("User not found");
     }
 }

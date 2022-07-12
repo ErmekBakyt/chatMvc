@@ -15,10 +15,11 @@ public class EmailSenderService : ISenderEmailService
         _emailConfiguration = emailConfiguration;
     }
 
-    public async Task SendEmailAsync(EmailMessage message)
+    public async Task<Result> SendEmailAsync(EmailMessage message)
     {
         var emailMessage = CreateEmailMessage(message);
-        await Send(emailMessage);
+        var result = await Send(emailMessage);
+        return result.Succeed ? Result.Success() : Result.Failure(result.Message);
     }
     
     private MimeMessage CreateEmailMessage(EmailMessage message)
@@ -32,7 +33,7 @@ public class EmailSenderService : ISenderEmailService
         return emailMessage;
     }
 
-    private async Task Send(MimeMessage mailMessage)
+    private async Task<Result> Send(MimeMessage mailMessage)
     {
         using var client = new SmtpClient();
         try
@@ -43,10 +44,16 @@ public class EmailSenderService : ISenderEmailService
 
             await client.SendAsync(mailMessage);
         }
+        catch (Exception e)
+        {
+            return Result.Failure(e.Message);
+        }
         finally
         {
             await client.DisconnectAsync(true);
             client.Dispose();
         }
+
+        return Result.Success();
     }
 }

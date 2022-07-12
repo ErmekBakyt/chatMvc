@@ -18,7 +18,8 @@ public static class IdentityExtension
             options.Password.RequireUppercase = false;
             options.Password.RequireNonAlphanumeric = false;
             
-        }).AddEntityFrameworkStores<AppDbContext>();
+        }).AddEntityFrameworkStores<AppDbContext>()
+            .AddDefaultTokenProviders();
 
         CookieBuilder cookieBuilder = new CookieBuilder();
         cookieBuilder.Name = "Chat";

@@ -4,5 +4,5 @@ namespace Chat.Application.Common.Interfaces.Infrastructure;
 
 public interface ISenderEmailService
 {
-    Task SendEmailAsync(EmailMessage message);
+    Task<Result> SendEmailAsync(EmailMessage message);
 }
