@@ -55,19 +55,18 @@ public class AccountController : BaseController
     {
         return View();
     }
+    
     [HttpPost]
     public async Task<IActionResult> ForgotPassword(ForgotPasswordCommand command)
     {
-        if (ModelState.IsValid)
-        {
-            var result = await Mediator.Send(command);
-            if (!result.Succeed) NotyfError(@"Server error try again please");
-
-            return View(command);
-        }
-        NotyfSuccess("Message successfully sent");
+        if (!ModelState.IsValid) return View();
         
-        return View();
+        var result = await Mediator.Send(command);
+        
+        if (!result.Succeed) NotyfError(@"Server error try again please");
+        else  NotyfSuccess("Message successfully sent");
+        
+        return View(command);
     }
 
     [HttpGet]
@@ -87,13 +86,10 @@ public class AccountController : BaseController
         command.UserId = TempData["userId"]?.ToString();
         
         var result = await Mediator.Send(command);
-        if (result.Succeed)
-        {
-            NotyfSuccess("Successfully updated");
-            return View();
-        }
-
-        NotyfError(result.Message);
-        return View();
+        
+        if (result.Succeed)  NotyfSuccess("Successfully updated");
+        else NotyfError(result.Message);
+        
+        return View(command);
     }
 }
