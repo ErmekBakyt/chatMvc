@@ -22,6 +22,9 @@ builder.Services.AddNotyf(options =>
     options.HasRippleEffect = false;
 });
 builder.Services.AddControllersWithViews();
+builder.Services.AddSignalR();
+
+
 
 var app = builder.Build();
 
