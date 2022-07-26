@@ -4,6 +4,7 @@ using Chat.Application;
 using Chat.Persistence;
 using Chat.Service;
 using Chat.WebUI.Extensions;
+using Chat.WebUI.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,5 +50,6 @@ app.UseNotyf();
 app.MapControllerRoute(
     "default",
     "{controller=Home}/{action=Index}/{id?}");
+app.MapHub<ChatHub>("/chat");
 
 app.Run();

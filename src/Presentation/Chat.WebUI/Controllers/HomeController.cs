@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Chat.WebUI.Controllers;
 
-[Authorize]
+//[Authorize]
 public class HomeController : BaseController
 {
     public IActionResult Index()

@@ -4,8 +4,8 @@ namespace Chat.WebUI.Hubs;
 
 public class ChatHub : Hub
 {
-    public void SendMessage(string message)
+    public async Task SendMessage(string message)
     {
-        Clients.All.SendAsync(message);
+        await Clients.All.SendAsync("SendMessage", message);
     }
 }
