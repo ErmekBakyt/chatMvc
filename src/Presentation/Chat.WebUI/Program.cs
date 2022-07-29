@@ -4,7 +4,7 @@ using Chat.Application;
 using Chat.Persistence;
 using Chat.Service;
 using Chat.WebUI.Extensions;
-using Chat.WebUI.Hubs;
+using Chat.WebUI.Infrastructure.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -11,6 +11,7 @@
       <Folder Include="Common\Mappers" />
       <Folder Include="Features\Account\Queries" />
       <Folder Include="Features\Messages\Queries" />
+      <Folder Include="Features\Users\Commands\" />
     </ItemGroup>
 
     <ItemGroup>

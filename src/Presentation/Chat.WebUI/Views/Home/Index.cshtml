@@ -4,6 +4,8 @@
 }
 
 <div class="text-center">
+    <label for="userId">UserId</label>
+    <input type="text" class="form-control" id="userId" />
     <input type="text" class="form-control message-input">
     <button class="btn btn-secondary send-btn">Send</button>
 </div>
@@ -32,10 +34,12 @@
             console.log(data)
             $(".message-card").append(data)
         })
-
+        
         $(".send-btn").click(function() {
+            const userId = $("#userId").val();
             const message = $(".message-input").val();
-            hubConnection.invoke("SendMessage", message);
+            //hubConnection.invoke("SendMessage", message);
+            hubConnection.invoke("SendToClient", userId, message);
         })
 
         hubConnection.start();
