@@ -5,9 +5,9 @@ namespace Chat.WebUI.Controllers
 {
     public class UserController : BaseController
     {
-        public async Task<IActionResult> SearchUser(string userNameOrEmail)
+        public async Task<IActionResult> SearchUsers(string userNameOrEmail)
         {
-            var appUser = await Mediator.Send(new SearchUserQuery(userNameOrEmail));
+            var appUser = await Mediator.Send(new SearchUsersQuery(userNameOrEmail));
             return Ok(appUser);
         }
     }

@@ -4,5 +4,5 @@ namespace Chat.Application.Common.Interfaces.Users;
 
 public interface IUserService
 {
-    Task<AppUser> SearchUserAsync(string userNameOrEmail);
+    Task<List<AppUser>> SearchUsersAsync(string userNameOrEmail);
 }

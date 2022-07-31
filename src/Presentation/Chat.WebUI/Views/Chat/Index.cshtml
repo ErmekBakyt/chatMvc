@@ -1,0 +1,146 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    Layout = "_Layout";
+}
+
+<div class="row">
+    <div class="chat-list col-lg-3">
+        <div>
+            <ul>
+                <li class="row py-3 search-li">
+                    <div>
+                        <input type="text" class="user-search" placeholder="Search">
+                    </div>
+                    <div></div>
+                </li>
+                <li class="row">
+                    <div class="profile col-lg-3 pe-0 py-2">
+                        <img class="profile-img" src="https://cdn-icons-png.flaticon.com/512/64/64572.png">
+                    </div>
+                    <div class="user-info col-lg-9 px-0 py-2">
+                        <div class="full-name-and-last-message-time d-flex justify-content-between">
+                            <div class="full-name">
+                                <span class="full-name-text">Ermek Bakyt</span>
+                            </div>
+                            <div>
+                                <span class="last-message-time">Wed</span>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <div class="last-message">
+                                <span class="last-message-text">Salam aleykum Ermek kandaisyn? Alo sen okudunbu bul sms ti okusan joop berip koichu suranam</span>
+                            </div>
+                            <div class="unread-message-count align-text-bottom">
+                                <span class="badge rounded-pill bg-info">3432</span>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="chat-body col-lg-9 ps-0">
+        <div class="current-user-info d-flex p-2 bg-white-blue-grey">
+            <div class="current-profile">
+                <img class="current-profile-img" src="https://cdn-icons-png.flaticon.com/512/64/64572.png">
+            </div>
+            <div class="ms-3 current-ls-fll-nm">
+                <div class="current-full-name">
+                    <span class="current-full-name-text text-white">Ermek Bakyt</span>
+                </div>
+                <div class="">
+                    <span class="text-blur last-seen">recently seen</span>
+                </div>
+            </div>
+        </div>
+        <div class="message-body">
+
+        </div>
+        <div class="d-flex position-fixed bottom-0 w-100">
+            <div class="d-grid write-message">
+                <input type="text" placeholder="Write a message" id="message-input" class="px-4 py-2 border-0 bg-white-blue-grey">
+            </div>
+            <div class="d-grid send-message">
+                <button class="send-message-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M1.513 1.96a1.374 1.374 0 011.499-.21l19.335 9.215a1.146 1.146 0 010 2.07L3.012 22.25a1.374 1.374 0 01-1.947-1.46L2.49 12 1.065 3.21a1.374 1.374 0 01.448-1.25zm2.375 10.79l-1.304 8.042L21.031 12 2.584 3.208l1.304 8.042h7.362a.75.75 0 010 1.5H3.888z"></path></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Styles
+{
+    <environment names="Production, Development, Staging">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="~/css/home.css">
+    </environment>
+}
+
+@section Scripts
+{
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+    <script >
+    
+        function getChatList(){
+           $.ajax({
+                type: "POST",
+                dataType: 'json',
+                url: '/User/SearchUsers/',
+                success: function(msg)
+                {
+                    doSomethingClever();
+                },
+                error: function(msg)
+                {
+                    doSomethingMoreClever();
+                },
+           });
+        }
+        
+        function sendMessage(message){
+            console.log(message)
+           $.ajax({
+                type: "POST",
+                dataType: 'json',
+                contentType: 'application/json; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
+                url: '/Chat/SendMessage',
+                data: JSON.stringify(message),
+                success: function(msg)
+                {
+                    //doSomethingClever();
+                },
+                error: function(msg)
+                {
+                    //doSomethingMoreClever();
+                },
+           });
+        }
+    
+    
+       $(".send-message-btn").click(function (){
+           const message = $("#message-input").val()
+           const obj = {
+               ToUserId: "ef12fe33-2e9e-4cfd-9d8a-d429acb14ee6",
+               TextMessage: message 
+           }
+           sendMessage(obj);
+       })
+        const hubConnection = new signalR.HubConnectionBuilder().withUrl("/chat").build();
+
+        hubConnection.on("SendMessage", function(data) { 
+            console.log(data)
+            $(".message-card").append(data)
+        })
+        
+        $(".send-btn").click(function() {
+            const userId = $("#userId").val();
+            const message = $(".message-input").val();
+            //hubConnection.invoke("SendMessage", message);
+            hubConnection.invoke("Join", userId, message);
+        })
+
+        hubConnection.start();
+    </script>
+}

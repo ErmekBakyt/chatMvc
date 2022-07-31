@@ -45,7 +45,7 @@ public class AccountController : BaseController
             if (!result.Succeed) NotyfError(result.Message);
 
             return TempData["returnUrl"] is not null ? Redirect(TempData["returnUrl"].ToString() ?? "Home/Index") 
-                : RedirectToAction("Index", "Home");
+                : RedirectToAction("Index", "Chat");
         }
         return View(command);
     }

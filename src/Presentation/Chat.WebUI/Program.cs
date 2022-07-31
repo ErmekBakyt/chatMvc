@@ -5,6 +5,7 @@ using Chat.Persistence;
 using Chat.Service;
 using Chat.WebUI.Extensions;
 using Chat.WebUI.Infrastructure.Hubs;
+using Chat.WebUI.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,7 @@ builder.Services.AddNotyf(options =>
     options.DurationInSeconds = 30;
     options.HasRippleEffect = false;
 });
+builder.Services.AddScoped<ChatService>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddSignalR();
 
@@ -32,7 +34,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
+    app.UseExceptionHandler("/Chat/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
@@ -49,7 +51,7 @@ app.UseNotyf();
 
 app.MapControllerRoute(
     "default",
-    "{controller=Home}/{action=Index}/{id?}");
+    "{controller=Chat}/{action=Index}/{id?}");
 app.MapHub<ChatHub>("/chat");
 
 app.Run();

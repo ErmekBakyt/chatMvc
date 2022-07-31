@@ -1,4 +1,5 @@
 using Chat.Application.Common.Interfaces.AppDbContext;
+using Chat.Core.Entities;
 using Chat.Core.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -11,4 +12,12 @@ public class AppDbContext : IdentityDbContext<AppUser>, IAppDbContext
     {
         
     }
+    
+    public DbSet<Message> Messages { get; set; }
+    
+    public override Task<int> SaveChangesAsync(CancellationToken token = new())
+    {
+        return base.SaveChangesAsync(token);
+    }
+
 }
