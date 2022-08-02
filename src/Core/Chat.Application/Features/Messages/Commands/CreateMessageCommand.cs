@@ -8,9 +8,9 @@ namespace Chat.Application.Features.Messages.Commands;
 public class CreateMessageCommand : IRequest<Result>
 {
     public string TextMessage { get; set; }
-    public Guid FromUserId { get; set; }
-    public Guid ToUserId { get; set; }
-    public int ChatListId { get; set; }
+    public string FromUserId { get; set; }
+    public string ToUserId { get; set; }
+    public string ChatListId { get; set; }
 }
 
 public class CreateMessageCommandHandler : IRequestHandler<CreateMessageCommand, Result>
@@ -29,7 +29,7 @@ public class CreateMessageCommandHandler : IRequestHandler<CreateMessageCommand,
             TextMessage = request.TextMessage,
             From = request.FromUserId,
             To = request.ToUserId,
-            CorrespondedUserId = request.ToUserId,
+            ChatListId = new Guid(request.ChatListId),
             CreatedDate = DateTime.Now.ToUniversalTime()
         }, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);

@@ -112,6 +112,12 @@ body {
 .send-message{
     width: 4%
 }
+.me-message{
+    background: #ffffffcf; border-radius: 4px; color: #0e1c21
+}
+.client-message{
+    background: #1291bf; border-radius: 4px;
+}
 
 ul {
     list-style: none;

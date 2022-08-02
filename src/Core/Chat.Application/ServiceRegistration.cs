@@ -12,6 +12,7 @@ public static class ServiceRegistration
         services
             .AddMediatR(Assembly.GetExecutingAssembly())
             .AddFluentValidation(fv =>  fv.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()));
+        services.AddAutoMapper(Assembly.GetExecutingAssembly());
         return services;
     }
 }

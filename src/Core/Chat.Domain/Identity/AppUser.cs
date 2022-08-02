@@ -7,5 +7,5 @@ public class AppUser : IdentityUser
 {
     public string FullName { get; set; }
 
-    public List<Message> Messages { get; set; }
+    public List<ChatList> Messages { get; set; }
 }

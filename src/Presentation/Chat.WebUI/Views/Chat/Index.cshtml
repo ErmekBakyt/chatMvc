@@ -1,6 +1,9 @@
-﻿@{
+﻿@using Chat.Application.Common.Extensions
+@model List<ChatListDto>
+@{
     ViewData["Title"] = "Home Page";
     Layout = "_Layout";
+    var currentUserId = Context.User.GetCurrentUserId<AppUser>();
 }
 
 <div class="row">
@@ -13,29 +16,13 @@
                     </div>
                     <div></div>
                 </li>
-                <li class="row">
-                    <div class="profile col-lg-3 pe-0 py-2">
-                        <img class="profile-img" src="https://cdn-icons-png.flaticon.com/512/64/64572.png">
-                    </div>
-                    <div class="user-info col-lg-9 px-0 py-2">
-                        <div class="full-name-and-last-message-time d-flex justify-content-between">
-                            <div class="full-name">
-                                <span class="full-name-text">Ermek Bakyt</span>
-                            </div>
-                            <div>
-                                <span class="last-message-time">Wed</span>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <div class="last-message">
-                                <span class="last-message-text">Salam aleykum Ermek kandaisyn? Alo sen okudunbu bul sms ti okusan joop berip koichu suranam</span>
-                            </div>
-                            <div class="unread-message-count align-text-bottom">
-                                <span class="badge rounded-pill bg-info">3432</span>
-                            </div>
-                        </div>
-                    </div>
-                </li>
+                @if (Model is not  null)
+                {
+                    foreach (var chatList in Model)
+                    {
+                        <partial name="Chat/_ChatListPartial" model="chatList"/>
+                    }
+                }
             </ul>
         </div>
     </div>
@@ -53,7 +40,7 @@
                 </div>
             </div>
         </div>
-        <div class="message-body">
+        <div class="message-body py-3 px-4">
 
         </div>
         <div class="d-flex position-fixed bottom-0 w-100">
@@ -83,20 +70,44 @@
     <script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
     <script >
     
-        function getChatList(){
+        const meHtml = '<div class="text-end my-2"><div class="d-inline-block px-2 py-1 me-message">token</div></div>'
+                       
+        const clientHtml = '<div class="text-white text-start my-2"><div class="d-inline-block px-2 py-1 client-message">token</div></div>'
+    
+        function getUserChatMessages(chatListId){
            $.ajax({
-                type: "POST",
+                type: "GET",
                 dataType: 'json',
-                url: '/User/SearchUsers/',
+                // contentType: 'application/json; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
+                url: "/Chat/GetUserChatMessages/"+chatListId,
                 success: function(msg)
                 {
-                    doSomethingClever();
+                    handleUserMessages(msg);
                 },
                 error: function(msg)
                 {
-                    doSomethingMoreClever();
+                    //doSomethingMoreClever();
                 },
            });
+        }
+        
+        function handleUserMessages(messages){
+            messages.forEach((response) => {
+                if ("@currentUserId" === response.fromUserId)
+                {
+                    if(response.textMessage !== null && response.textMessage.trim() !== ""){
+                         const html = meHtml.replace("token", response.textMessage)
+                         $(".message-body").append(html);
+                    }
+                }
+                else{
+                    if(response.textMessage !== null && response.textMessage.trim() !== ""){
+                         const html = clientHtml.replace("token", response.textMessage)
+                         $(".message-body").append(html);
+                    }            
+                }
+                console.log(response.textMessage)
+            })
         }
         
         function sendMessage(message){
@@ -122,11 +133,19 @@
        $(".send-message-btn").click(function (){
            const message = $("#message-input").val()
            const obj = {
-               ToUserId: "ef12fe33-2e9e-4cfd-9d8a-d429acb14ee6",
+               ToUserId: "e316ecfe-d029-4b58-9b46-f8d274c3687a",
                TextMessage: message 
            }
            sendMessage(obj);
        })
+       $(".chat-list-li").click(function (){
+           const chatListId = $(this).children("#chatListId").val()
+           getUserChatMessages(chatListId);
+       })
+       
+       
+       
+       
         const hubConnection = new signalR.HubConnectionBuilder().withUrl("/chat").build();
 
         hubConnection.on("SendMessage", function(data) { 

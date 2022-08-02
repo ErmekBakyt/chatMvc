@@ -1,4 +1,4 @@
-namespace Chat.Application.Features.Messages.Dto;
+namespace Chat.Application.Features.ChatList.Dto;
 
 public class LastMessageInfoDto
 {

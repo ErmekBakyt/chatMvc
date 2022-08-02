@@ -1,6 +1,6 @@
-namespace Chat.Application.Common.DTOs;
+namespace Chat.Application.Features.Messages.Dto;
 
-public class ChatMessageDto
+public class MessageDto
 {
     public string FromUserId { get; set; }
     public string ToUserId { get; set; }
