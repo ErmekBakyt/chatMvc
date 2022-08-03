@@ -21,21 +21,28 @@ public class ChatController : BaseController
     public async Task<IActionResult> SendMessage([FromBody] ChatMessageDto chatMessage)
     {
         var currentUserId = CurrentUser.CurrentUserId;
+        var commonChatListId = chatMessage.CommonChatListId;
 
+        if (string.IsNullOrEmpty(commonChatListId))
+        {
+            commonChatListId = await Mediator.Send(new CheckChatListExistenceQuery(chatMessage.FromUserId, chatMessage.ToUserId));
+            if (string.IsNullOrEmpty(commonChatListId))
+            {
+                (_,commonChatListId) = await Mediator.Send(new CreateChatListCommand
+                {
+                    FromUserId = currentUserId,
+                    ToUserId = chatMessage.ToUserId
+                });
+            }
+        }
 
-        // var (_,chatListId) = await Mediator.Send(new CreateChatListCommand
-        // {
-        //     FromUserId = currentUserId,
-        //     ToUserId = chatMessage.ToUserId
-        // });
-
-        // await Mediator.Send(new CreateMessageCommand
-        // {
-        //     TextMessage = chatMessage.TextMessage,
-        //     FromUserId = currentUserId,
-        //     ToUserId = chatMessage.ToUserId,
-        //     ChatListId = "2dd1925f-304f-474c-9bda-b77fa650d3c7"
-        // });
+        await Mediator.Send(new CreateMessageCommand
+        {
+            TextMessage = chatMessage.TextMessage,
+            FromUserId = currentUserId,
+            ToUserId = chatMessage.ToUserId,
+            CommonChatListId = commonChatListId
+        });
         // await ChatService.SendMessage(chatMessage.TextMessage, chatMessage.ToUserId.ToString());
         return Ok();
     }

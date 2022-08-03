@@ -7,7 +7,7 @@ public class ChatList : BaseGuidEntity
 {
     public string FromUserId { get; set; }
     public string ToUserId { get; set; }
-    public string CorrespondedUserId { get; set; }
+    public string CommonChatListId { get; set; }
 
     public List<Message> Messages { get; set; }
     public AppUser AppUser { get; set; }

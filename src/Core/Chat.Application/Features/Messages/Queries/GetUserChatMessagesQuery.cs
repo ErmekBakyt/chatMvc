@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Chat.Application.Features.Messages.Queries;
 
-public record GetUserChatMessagesQuery(string ChatListId) : IRequest<List<MessageDto>>;
+public record GetUserChatMessagesQuery(string CommonChatListId) : IRequest<List<MessageDto>>;
 
 public class GetUserChatMessagesQueryHandler : IRequestHandler<GetUserChatMessagesQuery, List<MessageDto>>
 {
@@ -26,7 +26,7 @@ public class GetUserChatMessagesQueryHandler : IRequestHandler<GetUserChatMessag
     {
         var currentUserId = _currentUserService.CurrentUserId;
         var messages = await _context.Messages
-            .Where(x => x.ChatListId.ToString() == request.ChatListId)
+            .Where(x => x.CommonChatListId.ToString() == request.CommonChatListId)
             .ToListAsync(cancellationToken);
         var messagesDto = _mapper.Map<List<MessageDto>>(messages);
         return messagesDto;

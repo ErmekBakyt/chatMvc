@@ -27,6 +27,8 @@
         </div>
     </div>
     <div class="chat-body col-lg-9 ps-0">
+        <input type="hidden" id="correspondedUserId">
+        <input type="hidden" id="commonChatListId">
         <div class="current-user-info d-flex p-2 bg-white-blue-grey">
             <div class="current-profile">
                 <img class="current-profile-img" src="https://cdn-icons-png.flaticon.com/512/64/64572.png">
@@ -106,7 +108,8 @@
                          $(".message-body").append(html);
                     }            
                 }
-                console.log(response.textMessage)
+                $("#correspondedUserId").val(response.toUserId);
+                $("#commonChatListId").val(response.commonChatListId);
             })
         }
         
@@ -132,9 +135,12 @@
     
        $(".send-message-btn").click(function (){
            const message = $("#message-input").val()
+           const toUserId = $("#correspondedUserId").val()
+           const commonChatListId = $("#commonChatListId").val();
            const obj = {
-               ToUserId: "e316ecfe-d029-4b58-9b46-f8d274c3687a",
-               TextMessage: message 
+               ToUserId: toUserId,
+               TextMessage: message,
+               CommonChatListId: commonChatListId
            }
            sendMessage(obj);
        })

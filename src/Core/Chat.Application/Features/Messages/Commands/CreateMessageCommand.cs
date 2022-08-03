@@ -10,7 +10,7 @@ public class CreateMessageCommand : IRequest<Result>
     public string TextMessage { get; set; }
     public string FromUserId { get; set; }
     public string ToUserId { get; set; }
-    public string ChatListId { get; set; }
+    public string CommonChatListId { get; set; }
 }
 
 public class CreateMessageCommandHandler : IRequestHandler<CreateMessageCommand, Result>
@@ -29,7 +29,7 @@ public class CreateMessageCommandHandler : IRequestHandler<CreateMessageCommand,
             TextMessage = request.TextMessage,
             From = request.FromUserId,
             To = request.ToUserId,
-            ChatListId = new Guid(request.ChatListId),
+            CommonChatListId = new Guid(request.CommonChatListId),
             CreatedDate = DateTime.Now.ToUniversalTime()
         }, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);

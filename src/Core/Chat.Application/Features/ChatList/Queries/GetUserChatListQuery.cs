@@ -26,7 +26,7 @@ public class GetUserChatListQueryHandler : IRequestHandler<GetUserChatListQuery,
     {
         var currentUserId = _currentUserService.CurrentUserId;
         var chatList = await _context.ChatLists
-            .Where(x => x.FromUserId == currentUserId || x.CorrespondedUserId == currentUserId)
+            .Where(x => x.FromUserId == currentUserId)
             .Include(x => x.AppUser)
             .Include(x => x.Messages.OrderByDescending(o => o.CreatedDate).Take(1))
             .ToListAsync(cancellationToken);

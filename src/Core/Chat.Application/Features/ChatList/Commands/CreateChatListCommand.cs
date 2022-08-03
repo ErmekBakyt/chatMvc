@@ -21,13 +21,22 @@ public class CreateChatListCommandHandler : IRequestHandler<CreateChatListComman
 
     public async Task<(Result,string)> Handle(CreateChatListCommand request, CancellationToken cancellationToken)
     {
-        var chatList = await _context.ChatLists.AddAsync(new Core.Entities.ChatList
+        var commonChatListId = Guid.NewGuid().ToString();
+        await _context.ChatLists.AddAsync(new Core.Entities.ChatList
         {
             FromUserId = request.FromUserId,
             ToUserId = request.ToUserId,
-            CorrespondedUserId = request.ToUserId
+            CommonChatListId = commonChatListId
         }, cancellationToken);
+        
+        await _context.ChatLists.AddAsync(new Core.Entities.ChatList
+        {
+            FromUserId = request.ToUserId,
+            ToUserId = request.FromUserId,
+            CommonChatListId = commonChatListId
+        }, cancellationToken);
+        
         await _context.SaveChangesAsync(cancellationToken);
-        return (Result.Success(),chatList.Entity.Id.ToString());
+        return (Result.Success(),commonChatListId);
     }
 }
