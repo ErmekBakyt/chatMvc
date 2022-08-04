@@ -1,5 +1,6 @@
 using System.Globalization;
 using Chat.Application.Common.Interfaces.Users;
+using Chat.Application.Common.Models;
 using Chat.Core.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -17,8 +18,9 @@ public class UserService : IUserService
 
     public async Task<List<AppUser>> SearchUsersAsync(string userNameOrEmail)
     {
-        return await _userManager.Users
+        var result = await _userManager.Users
             .Where(x => x.UserName.Contains(userNameOrEmail) || x.Email.Contains(userNameOrEmail))
             .ToListAsync();
+        return result;
     }
 }

@@ -28,7 +28,7 @@ namespace Chat.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("CorrespondedUserId")
+                    b.Property<string>("CommonChatListId")
                         .HasColumnType("text");
 
                     b.Property<string>("FromUserId")
@@ -50,7 +50,7 @@ namespace Chat.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("ChatListId")
+                    b.Property<Guid>("CommonChatListId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
@@ -67,7 +67,7 @@ namespace Chat.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ChatListId");
+                    b.HasIndex("CommonChatListId");
 
                     b.ToTable("Messages");
                 });
@@ -284,7 +284,7 @@ namespace Chat.Persistence.Migrations
                 {
                     b.HasOne("Chat.Core.Entities.ChatList", "ChatList")
                         .WithMany("Messages")
-                        .HasForeignKey("ChatListId")
+                        .HasForeignKey("CommonChatListId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

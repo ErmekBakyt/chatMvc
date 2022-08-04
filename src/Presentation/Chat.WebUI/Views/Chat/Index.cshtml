@@ -9,13 +9,16 @@
 <div class="row">
     <div class="chat-list col-lg-3">
         <div>
-            <ul>
-                <li class="row py-3 search-li">
+            <div>
+                <div class="row py-3 search-li">
                     <div>
                         <input type="text" class="user-search" placeholder="Search">
                     </div>
                     <div></div>
-                </li>
+                </div>
+            </div>
+            <ul class="ul">
+
                 @if (Model is not  null)
                 {
                     foreach (var chatList in Model)
@@ -35,7 +38,7 @@
             </div>
             <div class="ms-3 current-ls-fll-nm">
                 <div class="current-full-name">
-                    <span class="current-full-name-text text-white">Ermek Bakyt</span>
+                    <span class="current-full-name-text text-white">FullName</span>
                 </div>
                 <div class="">
                     <span class="text-blur last-seen">recently seen</span>
@@ -131,6 +134,38 @@
                 },
            });
         }
+        
+        function searchUsers(userNameOrEmail){
+        $.ajax({
+                type: "GET",
+                // dataType: 'json',
+                // contentType: 'application/json; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
+                url: "/User/SearchUsers?userNameOrEmail="+userNameOrEmail,
+                success: function(msg)
+                {
+                    $(".ul").html(msg)
+                    console.log(msg)
+                },
+                error: function(error)
+                {
+                    console.log(error)
+                    //doSomethingMoreClever();
+                },
+           });            
+        }
+        
+        function copyUserInfo(){
+            const fullName = $(".full-name-text").html();
+            alert(fullName)
+           $("#commonChatListId").val($(".chatListId").val())
+           $("#correspondedUserId").val($(".userId").val())
+           $(".current-full-name-text").html(fullName)
+        }
+        
+        $(".user-search").on("input", function (){
+            const userNameOrEmail = $(this).val();
+            searchUsers(userNameOrEmail)
+        })
     
     
        $(".send-message-btn").click(function (){
@@ -144,7 +179,13 @@
            }
            sendMessage(obj);
        })
-       $(".chat-list-li").click(function (){
+       
+       $(function (){
+           
+       })
+       
+       $(document).on("click",".chat-list-li", function (){
+           copyUserInfo();
            const chatListId = $(this).children("#chatListId").val()
            getUserChatMessages(chatListId);
        })

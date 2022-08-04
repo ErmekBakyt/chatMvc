@@ -38,6 +38,7 @@ public class GetUserChatListQueryHandler : IRequestHandler<GetUserChatListQuery,
                 {
                     FullName = x.AppUser.UserName,
                     ProfileImageUrl = "",
+                    UserId = x.AppUser.Id
                 },
                 LastMessageInfo = new LastMessageInfoDto
                 {
