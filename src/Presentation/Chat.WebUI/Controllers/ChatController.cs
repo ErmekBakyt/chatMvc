@@ -23,7 +23,7 @@ public class ChatController : BaseController
         var currentUserId = CurrentUser.CurrentUserId;
         var commonChatListId = chatMessage.CommonChatListId;
 
-        if (string.IsNullOrEmpty(commonChatListId))
+        if (string.IsNullOrEmpty(commonChatListId) || Guid.Parse(commonChatListId) == Guid.Empty)
         {
             commonChatListId = await Mediator.Send(new CheckChatListExistenceQuery(chatMessage.FromUserId, chatMessage.ToUserId));
             if (string.IsNullOrEmpty(commonChatListId))
