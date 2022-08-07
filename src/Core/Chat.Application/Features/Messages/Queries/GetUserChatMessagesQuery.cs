@@ -26,7 +26,7 @@ public class GetUserChatMessagesQueryHandler : IRequestHandler<GetUserChatMessag
     {
         var currentUserId = _currentUserService.CurrentUserId;
         var messages = await _context.Messages
-            .Where(x => x.CommonChatListId.ToString() == request.CommonChatListId)
+            .Where(x => x.CommonChatListId == request.CommonChatListId)
             .ToListAsync(cancellationToken);
         var messagesDto = _mapper.Map<List<MessageDto>>(messages);
         return messagesDto;

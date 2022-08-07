@@ -11,7 +11,5 @@ public class ChatListConfiguration :IEntityTypeConfiguration<ChatList>
         builder.HasKey(x => x.Id);
         builder.HasOne(x => x.AppUser)
             .WithMany(x => x.Messages).HasForeignKey(x => x.ToUserId);
-        builder.HasMany(x => x.Messages)
-            .WithOne(x => x.ChatList).HasForeignKey(x => x.CommonChatListId);
     }
 }

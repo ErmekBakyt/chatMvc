@@ -25,26 +25,25 @@ public class GetUserChatListQueryHandler : IRequestHandler<GetUserChatListQuery,
     public async Task<List<ChatListDto>> Handle(GetUserChatListQuery request, CancellationToken cancellationToken)
     {
         var currentUserId = _currentUserService.CurrentUserId;
+
         var chatList = await _context.ChatLists
             .Where(x => x.FromUserId == currentUserId)
             .Include(x => x.AppUser)
-            .Include(x => x.Messages.OrderByDescending(o => o.CreatedDate).Take(1))
             .ToListAsync(cancellationToken);
         var chatListDto = chatList
-            .Select(x => new ChatListDto
+            .Select(s => new ChatListDto
             {
-                Id = x.Id,
+                Id = s.Id,
                 UserInfo = new UserInfoDto
                 {
-                    FullName = x.AppUser.UserName,
+                    FullName = s.AppUser.UserName,
                     ProfileImageUrl = "",
-                    UserId = x.AppUser.Id
+                    UserId = s.AppUser.Id
                 },
-                LastMessageInfo = new LastMessageInfoDto
-                {
-                    LastMessage = x.Messages.FirstOrDefault()?.TextMessage,
-                    LastMessageTime = x.Messages.FirstOrDefault()?.CreatedDate ?? DateTime.MinValue,
-                }
+                LastMessageText = s.LastMessageText,
+                LastMessageTime = s.LastMessageTime,
+                CommonChatListId = s.CommonChatListId
+                
             }).ToList();
             
         return chatListDto;

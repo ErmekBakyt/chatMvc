@@ -1,5 +1,4 @@
 using Chat.Core.Common;
-using Chat.Core.Identity;
 
 namespace Chat.Core.Entities;
 
@@ -9,7 +8,7 @@ public class Message : BaseGuidEntity
     public string From { get; set; }
     public string To { get; set; }
     public DateTime CreatedDate { get; set; }
-    public Guid CommonChatListId { get; set; }
+    public string CommonChatListId { get; set; }
 
     public ChatList ChatList { get; set; }
 }

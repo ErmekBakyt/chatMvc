@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using Chat.Core.Common;
 using Chat.Core.Identity;
 
@@ -8,7 +9,7 @@ public class ChatList : BaseGuidEntity
     public string FromUserId { get; set; }
     public string ToUserId { get; set; }
     public string CommonChatListId { get; set; }
-
-    public List<Message> Messages { get; set; }
+    public string LastMessageText { get; set; }
+    public DateTime LastMessageTime { get; set; }
     public AppUser AppUser { get; set; }
 }

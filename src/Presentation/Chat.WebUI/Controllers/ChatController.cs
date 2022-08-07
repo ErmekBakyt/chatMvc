@@ -23,9 +23,9 @@ public class ChatController : BaseController
         var currentUserId = CurrentUser.CurrentUserId;
         var commonChatListId = chatMessage.CommonChatListId;
 
-        if (string.IsNullOrEmpty(commonChatListId) || Guid.Parse(commonChatListId) == Guid.Empty)
+        if (string.IsNullOrEmpty(commonChatListId))
         {
-            commonChatListId = await Mediator.Send(new CheckChatListExistenceQuery(chatMessage.FromUserId, chatMessage.ToUserId));
+            commonChatListId = await Mediator.Send(new CheckChatListExistenceQuery(currentUserId, chatMessage.ToUserId));
             if (string.IsNullOrEmpty(commonChatListId))
             {
                 (_,commonChatListId) = await Mediator.Send(new CreateChatListCommand
@@ -43,8 +43,8 @@ public class ChatController : BaseController
             ToUserId = chatMessage.ToUserId,
             CommonChatListId = commonChatListId
         });
-        // await ChatService.SendMessage(chatMessage.TextMessage, chatMessage.ToUserId.ToString());
-        return Ok();
+        await ChatService.SendMessage(chatMessage.TextMessage, chatMessage.ToUserId.ToString());
+        return Ok(new {UserId = chatMessage.ToUserId, commonChatListId});
     }
 
     [HttpGet("Chat/GetUserChatMessages/{chatListId}")]

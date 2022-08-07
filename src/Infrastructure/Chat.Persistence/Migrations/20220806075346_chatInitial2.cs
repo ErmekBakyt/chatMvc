@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Chat.Persistence.Migrations
 {
-    public partial class chatInitial : Migration
+    public partial class chatInitial2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -157,19 +157,21 @@ namespace Chat.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ChatList",
+                name: "ChatLists",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     FromUserId = table.Column<string>(type: "text", nullable: true),
                     ToUserId = table.Column<string>(type: "text", nullable: true),
-                    CorrespondedUserId = table.Column<string>(type: "text", nullable: true)
+                    CommonChatListId = table.Column<string>(type: "text", nullable: true),
+                    LastMessageText = table.Column<string>(type: "text", nullable: true),
+                    LastMessageTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ChatList", x => x.Id);
+                    table.PrimaryKey("PK_ChatLists", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ChatList_AspNetUsers_ToUserId",
+                        name: "FK_ChatLists_AspNetUsers_ToUserId",
                         column: x => x.ToUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
@@ -184,17 +186,17 @@ namespace Chat.Persistence.Migrations
                     From = table.Column<string>(type: "text", nullable: true),
                     To = table.Column<string>(type: "text", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ChatListId = table.Column<Guid>(type: "uuid", nullable: false)
+                    CommonChatListId = table.Column<string>(type: "text", nullable: true),
+                    ChatListId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Messages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Messages_ChatList_ChatListId",
+                        name: "FK_Messages_ChatLists_ChatListId",
                         column: x => x.ChatListId,
-                        principalTable: "ChatList",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalTable: "ChatLists",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -235,8 +237,8 @@ namespace Chat.Persistence.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_ChatList_ToUserId",
-                table: "ChatList",
+                name: "IX_ChatLists_ToUserId",
+                table: "ChatLists",
                 column: "ToUserId");
 
             migrationBuilder.CreateIndex(
@@ -269,7 +271,7 @@ namespace Chat.Persistence.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "ChatList");
+                name: "ChatLists");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

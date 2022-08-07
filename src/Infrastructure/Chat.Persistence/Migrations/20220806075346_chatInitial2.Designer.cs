@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Chat.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220801165053_chatInitial")]
-    partial class chatInitial
+    [Migration("20220806075346_chatInitial2")]
+    partial class chatInitial2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -30,11 +30,17 @@ namespace Chat.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("CorrespondedUserId")
+                    b.Property<string>("CommonChatListId")
                         .HasColumnType("text");
 
                     b.Property<string>("FromUserId")
                         .HasColumnType("text");
+
+                    b.Property<string>("LastMessageText")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("LastMessageTime")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("ToUserId")
                         .HasColumnType("text");
@@ -43,7 +49,7 @@ namespace Chat.Persistence.Migrations
 
                     b.HasIndex("ToUserId");
 
-                    b.ToTable("ChatList");
+                    b.ToTable("ChatLists");
                 });
 
             modelBuilder.Entity("Chat.Core.Entities.Message", b =>
@@ -52,8 +58,11 @@ namespace Chat.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("ChatListId")
+                    b.Property<Guid?>("ChatListId")
                         .HasColumnType("uuid");
+
+                    b.Property<string>("CommonChatListId")
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
@@ -285,10 +294,8 @@ namespace Chat.Persistence.Migrations
             modelBuilder.Entity("Chat.Core.Entities.Message", b =>
                 {
                     b.HasOne("Chat.Core.Entities.ChatList", "ChatList")
-                        .WithMany("Messages")
-                        .HasForeignKey("ChatListId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("ChatListId");
 
                     b.Navigation("ChatList");
                 });
@@ -342,11 +349,6 @@ namespace Chat.Persistence.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Chat.Core.Entities.ChatList", b =>
-                {
-                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("Chat.Core.Identity.AppUser", b =>

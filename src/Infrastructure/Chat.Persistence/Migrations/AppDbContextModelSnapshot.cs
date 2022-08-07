@@ -34,6 +34,12 @@ namespace Chat.Persistence.Migrations
                     b.Property<string>("FromUserId")
                         .HasColumnType("text");
 
+                    b.Property<string>("LastMessageText")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("LastMessageTime")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("ToUserId")
                         .HasColumnType("text");
 
@@ -50,8 +56,11 @@ namespace Chat.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("CommonChatListId")
+                    b.Property<Guid?>("ChatListId")
                         .HasColumnType("uuid");
+
+                    b.Property<string>("CommonChatListId")
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
@@ -67,7 +76,7 @@ namespace Chat.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CommonChatListId");
+                    b.HasIndex("ChatListId");
 
                     b.ToTable("Messages");
                 });
@@ -283,10 +292,8 @@ namespace Chat.Persistence.Migrations
             modelBuilder.Entity("Chat.Core.Entities.Message", b =>
                 {
                     b.HasOne("Chat.Core.Entities.ChatList", "ChatList")
-                        .WithMany("Messages")
-                        .HasForeignKey("CommonChatListId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("ChatListId");
 
                     b.Navigation("ChatList");
                 });
@@ -340,11 +347,6 @@ namespace Chat.Persistence.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Chat.Core.Entities.ChatList", b =>
-                {
-                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("Chat.Core.Identity.AppUser", b =>

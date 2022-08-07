@@ -7,12 +7,19 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Folder Include="Migrations" />
       <Folder Include="Seeds" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\Core\Chat.Application\Chat.Application.csproj" />
       <ProjectReference Include="..\..\Core\Chat.Domain\Chat.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Migrations\AppDbContextModelSnapshot.cs" />
+      <Compile Remove="Migrations\20220806040509_chatInitial2.Designer.cs" />
+      <Compile Remove="Migrations\20220806070748_chatInitial2.Designer.cs" />
     </ItemGroup>
 
 </Project>

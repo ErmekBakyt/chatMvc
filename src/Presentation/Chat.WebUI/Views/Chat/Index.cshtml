@@ -29,10 +29,10 @@
             </ul>
         </div>
     </div>
-    <div class="chat-body col-lg-9 ps-0">
+    <div class="chat-body col-lg-9 ps-0 overflow-scroll" id="chat-body">
         <input type="hidden" id="correspondedUserId">
         <input type="hidden" id="commonChatListId">
-        <div class="current-user-info d-flex p-2 bg-white-blue-grey">
+        <div class="current-user-info d-flex p-2 bg-white-blue-grey" id="current-user-info">
             <div class="current-profile">
                 <img class="current-profile-img" src="https://cdn-icons-png.flaticon.com/512/64/64572.png">
             </div>
@@ -45,10 +45,10 @@
                 </div>
             </div>
         </div>
-        <div class="message-body py-3 px-4">
+        <div class="message-body py-3 px-4 pb-10">
 
         </div>
-        <div class="d-flex position-fixed bottom-0 w-100">
+        <div class="d-flex position-fixed bottom-0 w-100" id="send-message-div">
             <div class="d-grid write-message">
                 <input type="text" placeholder="Write a message" id="message-input" class="px-4 py-2 border-0 bg-white-blue-grey">
             </div>
@@ -79,11 +79,19 @@
                        
         const clientHtml = '<div class="text-white text-start my-2"><div class="d-inline-block px-2 py-1 client-message">token</div></div>'
     
+        const hubConnection = new signalR.HubConnectionBuilder().withUrl("/chat").build();
+        
+        function onLoad() {
+            $("#current-user-info").attr("style", "display:none !important");
+            $("#send-message-div").attr("style", "display:none !important");
+        }
+        
+        onLoad()
+            
         function getUserChatMessages(chatListId){
            $.ajax({
                 type: "GET",
                 dataType: 'json',
-                // contentType: 'application/json; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
                 url: "/Chat/GetUserChatMessages/"+chatListId,
                 success: function(msg)
                 {
@@ -97,6 +105,7 @@
         }
         
         function handleUserMessages(messages){
+            $(".message-body").empty();
             messages.forEach((response) => {
                 if ("@currentUserId" === response.fromUserId)
                 {
@@ -111,14 +120,13 @@
                          $(".message-body").append(html);
                     }            
                 }
-                $("#correspondedUserId").val(response.toUserId);
+                // $("#correspondedUserId").val(response.toUserId);
                 $("#commonChatListId").val(response.commonChatListId);
             })
         }
         
         function sendMessage(message){
-            console.log(message)
-           $.ajax({
+            $.ajax({
                 type: "POST",
                 dataType: 'json',
                 contentType: 'application/json; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
@@ -126,40 +134,51 @@
                 data: JSON.stringify(message),
                 success: function(msg)
                 {
-                    //doSomethingClever();
+                    handlerSendMessageResponse(msg.userId, msg.commonChatListId)
+                    const html = meHtml.replace("token", message.TextMessage)
+                    $(".message-body").append(html);
                 },
                 error: function(msg)
                 {
                     //doSomethingMoreClever();
                 },
-           });
+            });
         }
         
         function searchUsers(userNameOrEmail){
-        $.ajax({
+            $.ajax({
                 type: "GET",
-                // dataType: 'json',
-                // contentType: 'application/json; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
                 url: "/User/SearchUsers?userNameOrEmail="+userNameOrEmail,
                 success: function(msg)
                 {
                     $(".ul").html(msg)
-                    console.log(msg)
                 },
                 error: function(error)
                 {
                     console.log(error)
-                    //doSomethingMoreClever();
                 },
            });            
         }
         
         function copyUserInfo(){
             const fullName = $(".full-name-text").html();
-            alert(fullName)
+            const corrUId = $("#userId").val();
+            console.log("corrUId: "+corrUId);
            $("#commonChatListId").val($("#chatListId").val())
-           $("#correspondedUserId").val($("#userId").val())
+           $("#correspondedUserId").val(corrUId)
            $(".current-full-name-text").html(fullName)
+           $("#current-user-info").attr("style", "display:flex !important");
+           $("#send-message-div").attr("style", "display:flex !important");
+        }
+        
+        function handlerSendMessageResponse(userId, commonChatListId){
+             $(`input[value=${userId}]`).siblings("#chatListId").val(commonChatListId)
+        }
+        
+        function scrollToBottom() {
+            let element = document.getElementById("chat-body");
+            element.scrollTop = element.scrollHeight;
+            console.log("element.scrollHeight;"+element.scrollHeight)
         }
         
         $(".user-search").on("input", function (){
@@ -169,7 +188,9 @@
     
     
        $(".send-message-btn").click(function (){
-           const message = $("#message-input").val()
+           const input_message = $("#message-input");
+           const message = input_message.val()
+           input_message.val('');
            const toUserId = $("#correspondedUserId").val()
            const commonChatListId = $("#commonChatListId").val();
            const obj = {
@@ -178,35 +199,29 @@
                CommonChatListId: commonChatListId
            }
            sendMessage(obj);
+           scrollToBottom();
        })
-       
-       $(function (){
-           
-       })
-       
-       $(document).on("click",".chat-list-li", function (){
+     
+       $(document).on("click",".chat-list-li", async function (){
            copyUserInfo();
            const chatListId = $(this).children("#chatListId").val()
+       
            getUserChatMessages(chatListId);
+           setTimeout(()=>{
+               scrollToBottom();
+           },900)       
        })
-       
-       
-       
-       
-        const hubConnection = new signalR.HubConnectionBuilder().withUrl("/chat").build();
 
-        hubConnection.on("SendMessage", function(data) { 
-            console.log(data)
-            $(".message-card").append(data)
+        
+        hubConnection.on("ReceiveMessage", function(data) { 
+            const html = clientHtml.replace("token", data)
+            const toUserId = $("#correspondedUserId").val()
+            if (toUserId !== 'undefined' && toUserId !== null && toUserId !== ""){
+                $(".message-body").append(html);
+                scrollToBottom();
+            }
         })
         
-        $(".send-btn").click(function() {
-            const userId = $("#userId").val();
-            const message = $(".message-input").val();
-            //hubConnection.invoke("SendMessage", message);
-            hubConnection.invoke("Join", userId, message);
-        })
-
         hubConnection.start();
     </script>
 }

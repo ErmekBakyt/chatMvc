@@ -17,7 +17,7 @@ namespace Chat.WebUI.Controllers
                     {
                         FullName = appUsers.FirstOrDefault()?.UserName,
                         UserId = appUsers.FirstOrDefault()?.Id
-                    },
+                    }
                 };
             
             return PartialView("Chat/_ChatListPartial",chatListDto);

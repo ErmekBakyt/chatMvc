@@ -1,7 +1,7 @@
 @model ChatListDto
 
 <li class="row chat-list-li">
-    <input type="hidden" id="chatListId" value="@Model?.Id">
+    <input type="hidden" id="chatListId" value="@Model?.CommonChatListId">
     <input type="hidden" id="userId" value="@Model?.UserInfo?.UserId">
     <div class="profile col-lg-3 pe-0 py-2">
         <img class="profile-img" src="https://cdn-icons-png.flaticon.com/512/64/64572.png">
@@ -12,15 +12,15 @@
                 <span class="full-name-text">@Model?.UserInfo?.FullName</span>
             </div>
             <div>
-                <span class="last-message-time">@Model?.LastMessageInfo?.LastMessageTime</span>
+                <span class="last-message-time">@Model?.LastMessageTime</span>
             </div>
         </div>
         <div class="d-flex justify-content-between">
             <div class="last-message">
-                <span class="last-message-text">@Model?.LastMessageInfo?.LastMessage</span>
+                <span class="last-message-text">@Model?.LastMessageText</span>
             </div>
             <div class="unread-message-count align-text-bottom">
-                <span class="badge rounded-pill bg-info">@Model?.LastMessageInfo?.UnreadMessageCount</span>
+                <span class="badge rounded-pill bg-info">@Model?.UnreadMessageCount</span>
             </div>
         </div>
     </div>
